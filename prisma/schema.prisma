@@ -1,0 +1,44 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  passwordHash String   @map("password_hash")
+  Ticket       Ticket[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Movie {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  Ticket      Ticket[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Ticket {
+  id          String @id @default(cuid())
+  title       String
+  room        Int
+  seat        Int
+  description String
+  assigneeId  String @map("assignee_id")
+  movieId     String @map("movie_id")
+  assignee    User   @relation(fields: [assigneeId], references: [id])
+  movie       Movie  @relation(fields: [movieId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
