@@ -2,6 +2,12 @@ generator client {
   provider = "prisma-client-js"
 }
 
+enum RommType {
+  IMAX
+  VIP
+  STANDARD
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -19,26 +25,65 @@ model User {
 }
 
 model Movie {
-  id          String   @id @default(cuid())
-  title       String
-  description String
-  Ticket      Ticket[]
+  id           String         @id @default(cuid())
+  title        String
+  description  String
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  MovieSession MovieSession[]
+}
+
+model Ticket {
+  id             String       @id @default(cuid())
+  ownerTo        String       @map("ownerTo")
+  movieSessionId String       @map("movie_session_id")
+  roomId         String       @map("room_id")
+  seatId         String       @map("seat_id")
+  room           Room         @relation(fields: [roomId], references: [id])
+  owner          User         @relation(fields: [ownerTo], references: [id])
+  seat           Seat         @relation(fields: [seatId], references: [id])
+  MovieSession   MovieSession @relation(fields: [movieSessionId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-model Ticket {
-  id          String @id @default(cuid())
-  title       String
-  room        Int
-  seat        Int
-  description String
-  assigneeId  String @map("assignee_id")
-  movieId     String @map("movie_id")
-  assignee    User   @relation(fields: [assigneeId], references: [id])
-  movie       Movie  @relation(fields: [movieId], references: [id])
+model MovieSession {
+  id String @id @default(cuid())
+
+  movieId String   @map("movie_id")
+  roomId  String   @map("room_id")
+  startAt DateTime @map("start_at")
+  endAt   DateTime @map("end_at")
+  price   BigInt
+
+  Movie Movie @relation(fields: [movieId], references: [id])
+  Room  Room  @relation(fields: [roomId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  Ticket Ticket[]
+}
+
+model Room {
+  id        String   @id @default(cuid())
+  number    Int
+  type      RommType @default(STANDARD)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  MovieSession MovieSession[]
+  Seat         Seat[]
+  Ticket       Ticket[]
+}
+
+model Seat {
+  id        String   @id @default(cuid())
+  number    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  roomId    String
+  room      Room     @relation(fields: [roomId], references: [id])
+  Ticket    Ticket[]
 }

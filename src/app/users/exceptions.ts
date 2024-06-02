@@ -1,5 +1,5 @@
 export class UserAlreadyExists extends Error {
   constructor() {
-    super('User already exists');
+    super('UserEntity already exists');
   }
 }

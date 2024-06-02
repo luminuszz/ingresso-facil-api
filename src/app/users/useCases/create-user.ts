@@ -1,9 +1,9 @@
-import { User } from '../user';
+import { UserEntity } from '../user.entity';
 import { UseCaseImpl } from '../../../core/use-case-impl';
 import { UserRepository } from '../user-repository';
 import { HashProvider } from '../hash-provider';
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { UserAlreadyExists } from '../errors';
+import { Injectable } from '@nestjs/common';
+import { UserAlreadyExists } from '../exceptions';
 
 interface CreateUserRequest {
   name: string;
@@ -11,7 +11,7 @@ interface CreateUserRequest {
   password: string;
 }
 
-type CreateUserResponse = { user: User };
+type CreateUserResponse = { user: UserEntity };
 
 @Injectable()
 export class CreateUser
@@ -33,7 +33,7 @@ export class CreateUser
       throw new UserAlreadyExists();
     }
 
-    const user = User.create({
+    const user = UserEntity.create({
       name,
       password: await this.hashProvider.hash(password),
       email,
