@@ -2,7 +2,6 @@ import { UseCaseImpl } from '../../../core/use-case-impl';
 import { Injectable } from '@nestjs/common';
 import { TicketEntity } from '../ticket.entity';
 import { UserRepository } from '../../users/user-repository';
-import { MovieRepository } from '../../movie/movie-repository';
 import { ResourceNotFoundException } from '../../../core/errors';
 import { TicketRepository } from '../ticket-repository';
 
