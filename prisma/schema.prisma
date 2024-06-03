@@ -8,6 +8,11 @@ enum RommType {
   STANDARD
 }
 
+enum TicketStatus {
+  RESERVED
+  PURCHASED
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -39,6 +44,7 @@ model Ticket {
   movieSessionId String       @map("movie_session_id")
   roomId         String       @map("room_id")
   seatId         String       @map("seat_id")
+  status         TicketStatus @default(RESERVED)
   room           Room         @relation(fields: [roomId], references: [id])
   owner          User         @relation(fields: [ownerTo], references: [id])
   seat           Seat         @relation(fields: [seatId], references: [id])
@@ -55,7 +61,7 @@ model MovieSession {
   roomId  String   @map("room_id")
   startAt DateTime @map("start_at")
   endAt   DateTime @map("end_at")
-  price   BigInt
+  price   Float
 
   Movie Movie @relation(fields: [movieId], references: [id])
   Room  Room  @relation(fields: [roomId], references: [id])

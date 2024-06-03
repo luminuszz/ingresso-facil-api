@@ -4,7 +4,7 @@ import {
   CreateTicketDto,
   createTicketSchema,
 } from './validators/tickets.schema';
-import { CreateTicket } from '../../app/ticket/useCases/create-ticket';
+import { CreateTicket } from '@app/ticket/useCases/create-ticket';
 
 @Controller('/tickets')
 export class TicketController {

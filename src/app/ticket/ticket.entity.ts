@@ -1,4 +1,9 @@
-import { Entity } from '../../core/Entity';
+import { Entity } from '@core/Entity';
+
+export enum TicketStatus {
+  RESERVED = 'RESERVED',
+  PURCHASED = 'PURCHASED',
+}
 
 export interface TicketProps {
   roomId: string;
@@ -8,6 +13,7 @@ export interface TicketProps {
 
   createdAt: Date;
   updatedAt: Date | null;
+  status: TicketStatus;
 }
 
 export class TicketEntity extends Entity<TicketProps> {
@@ -62,5 +68,13 @@ export class TicketEntity extends Entity<TicketProps> {
     props.updatedAt = props.updatedAt ?? null;
 
     return new TicketEntity(props, id);
+  }
+
+  get status(): TicketStatus {
+    return this.props.status;
+  }
+
+  set status(value: TicketStatus) {
+    this.props.status = value;
   }
 }

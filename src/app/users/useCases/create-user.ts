@@ -1,5 +1,5 @@
 import { UserEntity } from '../user.entity';
-import { UseCaseImpl } from '../../../core/use-case-impl';
+import { UseCaseImpl } from '@core/use-case-impl';
 import { UserRepository } from '../user-repository';
 import { HashProvider } from '../hash-provider';
 import { Injectable } from '@nestjs/common';

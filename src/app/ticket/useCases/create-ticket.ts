@@ -1,14 +1,15 @@
 import { UseCaseImpl } from '../../../core/use-case-impl';
-import { Injectable } from '@nestjs/common';
-import { TicketEntity } from '../ticket.entity';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { TicketEntity, TicketStatus } from '../ticket.entity';
 import { UserRepository } from '../../users/user-repository';
 import { ResourceNotFoundException } from '../../../core/errors';
 import { TicketRepository } from '../ticket-repository';
+import { MovieRepository } from '@app/movie/movie-repository';
+import { isPast } from 'date-fns';
 
 interface CreateTicketRequest {
   userId: string;
   movieSessionId: string;
-  roomId: string;
   seatId: string;
 }
 
@@ -19,29 +20,46 @@ export class CreateTicket
   implements UseCaseImpl<CreateTicketRequest, CreateTicketResponse>
 {
   constructor(
-    private readonly userRepository: UserRepository,
     private readonly ticketRepository: TicketRepository,
+    private readonly movieRepository: MovieRepository,
   ) {}
 
   async execute({
     movieSessionId,
     seatId,
-    roomId,
     userId,
   }: CreateTicketRequest): Promise<CreateTicketResponse> {
-    const existsUser = await this.userRepository.findById(userId);
+    const movieSession =
+      await this.movieRepository.findMovieSessionById(movieSessionId);
 
-    if (!existsUser) {
-      throw new ResourceNotFoundException('User');
+    if (!movieSession) {
+      throw new ResourceNotFoundException('MovieSession');
+    }
+
+    const sessionIsAlreadyEnded = isPast(movieSession.endsAt);
+
+    if (sessionIsAlreadyEnded) {
+      throw new BadRequestException('Movie session is already ended');
+    }
+
+    const tickets = await this.ticketRepository.findTicketByMovieSessionId(
+      movieSession.id,
+    );
+
+    const seatIsAvailable = !tickets.find((ticket) => ticket.seatId === seatId);
+
+    if (!seatIsAvailable) {
+      throw new BadRequestException('Seat is not available');
     }
 
     const ticket = TicketEntity.create({
-      ownerTo: existsUser.id,
+      ownerTo: userId,
+      seatId: seatId,
+      roomId: movieSession.roomId,
+      movieSessionId: movieSession.id,
       createdAt: new Date(),
-      roomId,
-      movieSessionId,
-      seatId,
       updatedAt: null,
+      status: TicketStatus.RESERVED,
     });
 
     await this.ticketRepository.create(ticket);

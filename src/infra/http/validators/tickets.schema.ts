@@ -3,7 +3,6 @@ import { z } from 'zod';
 export const createTicketSchema = z.object({
   userId: z.string().cuid(),
   movieSessionId: z.string().cuid(),
-  roomId: z.string().cuid(),
   seatId: z.string().cuid(),
 });
 

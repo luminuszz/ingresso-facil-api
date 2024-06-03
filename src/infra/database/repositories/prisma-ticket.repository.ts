@@ -1,4 +1,4 @@
-import { TicketEntity } from 'src/app/ticket/ticket.entity';
+import { TicketEntity, TicketStatus } from 'src/app/ticket/ticket.entity';
 import { TicketRepository } from '../../../app/ticket/ticket-repository';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
@@ -17,6 +17,18 @@ interface PrismaTicketWithRelation extends PrismaTicket {
 export class PrismaTicketRepository implements TicketRepository {
   constructor(private readonly prisma: PrismaService) {}
 
+  async findTicketByMovieSessionId(
+    movieSessionId: string,
+  ): Promise<TicketEntity[]> {
+    const tickets = await this.prisma.ticket.findMany({
+      where: {
+        movieSessionId,
+      },
+    });
+
+    return tickets.map(this.parsePrismaTicketToTicket);
+  }
+
   async create(ticket: TicketEntity): Promise<void> {
     await this.prisma.ticket.create({
       data: {
@@ -25,6 +37,7 @@ export class PrismaTicketRepository implements TicketRepository {
         roomId: ticket.room,
         ownerTo: ticket.ownerTo,
         seatId: ticket.seatId,
+        status: TicketStatus[ticket.status],
       },
     });
   }
@@ -40,6 +53,7 @@ export class PrismaTicketRepository implements TicketRepository {
         roomId: ticket.roomId,
         ownerTo: ticket.ownerTo,
         updatedAt: ticket.updatedAt,
+        status: TicketStatus[ticket.status],
       },
       ticket.id,
     );
