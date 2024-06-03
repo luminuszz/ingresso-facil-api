@@ -1,4 +1,4 @@
-import { UseCaseImpl } from '../../../core/use-case-impl';
+import { UseCaseImpl } from '@core/use-case-impl';
 import { MovieEntity } from '../movie.entity';
 import { Injectable } from '@nestjs/common';
 import { MovieRepository } from '../movie-repository';

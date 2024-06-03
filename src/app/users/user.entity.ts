@@ -1,4 +1,9 @@
-import { Entity } from '../../core/Entity';
+import { Entity } from '@core/Entity';
+
+export enum UserRole {
+  ADMIN = 'ADMIN',
+  USER = 'USER',
+}
 
 interface UserProps {
   name: string;
@@ -6,11 +11,20 @@ interface UserProps {
   password: string;
   createdAt: Date;
   updatedAt: Date | null;
+  role: UserRole;
 }
 
 export class UserEntity extends Entity<UserProps> {
   get name(): string {
     return this.props.name;
+  }
+
+  get role(): UserRole {
+    return this.props.role;
+  }
+
+  set role(value: UserRole) {
+    this.props.role = value;
   }
 
   set name(value: string) {

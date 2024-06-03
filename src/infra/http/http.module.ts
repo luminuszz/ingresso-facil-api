@@ -13,6 +13,12 @@ import { ListSeatsInRoom } from '@app/room/useCases/list-seats-in-room';
 import { RoomController } from './room.controller';
 import { CreateMovieSession } from '@app/movie/useCases/create-movie-session';
 import { ListMovieSessionSeats } from '@app/movie/useCases/list-movie-session-seats';
+import { AuthController } from './auth.controller';
+import { ValidateUser } from '@app/users/useCases/validate-user';
+import { AuthModule } from '../auth/auth.module';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthGuard } from '../auth/auth.guard';
+import { RoleGuard } from '../auth/role.guard';
 
 const UseCases = [
   CreateUser,
@@ -23,16 +29,22 @@ const UseCases = [
   ListSeatsInRoom,
   CreateMovieSession,
   ListMovieSessionSeats,
+  ValidateUser,
 ];
 
 @Module({
-  imports: [PrismaModule, EncryptModule],
-  providers: [...UseCases],
+  imports: [PrismaModule, EncryptModule, AuthModule],
+  providers: [
+    ...UseCases,
+    { provide: APP_GUARD, useClass: AuthGuard },
+    { provide: APP_GUARD, useClass: RoleGuard },
+  ],
   controllers: [
     UserController,
     MovieController,
     TicketController,
     RoomController,
+    AuthController,
   ],
 })
 export class HttpModule {}

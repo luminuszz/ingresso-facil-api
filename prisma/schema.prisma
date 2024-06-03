@@ -2,6 +2,11 @@ generator client {
   provider = "prisma-client-js"
 }
 
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
 enum RommType {
   IMAX
   VIP
@@ -13,9 +18,9 @@ enum TicketStatus {
   PURCHASED
 }
 
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+enum UserRole {
+  ADMIN
+  USER
 }
 
 model User {
@@ -23,6 +28,7 @@ model User {
   email        String   @unique
   name         String
   passwordHash String   @map("password_hash")
+  role         UserRole @default(USER)
   Ticket       Ticket[]
 
   createdAt DateTime @default(now())

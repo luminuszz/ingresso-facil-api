@@ -1,4 +1,4 @@
-import { UserEntity } from '../user.entity';
+import { UserEntity, UserRole } from '../user.entity';
 import { UseCaseImpl } from '@core/use-case-impl';
 import { UserRepository } from '../user-repository';
 import { HashProvider } from '../hash-provider';
@@ -39,6 +39,7 @@ export class CreateUser
       email,
       createdAt: new Date(),
       updatedAt: null,
+      role: UserRole.USER,
     });
 
     await this.userRepository.create(user);

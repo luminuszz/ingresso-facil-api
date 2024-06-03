@@ -1,4 +1,4 @@
-import { UserEntity } from 'src/app/users/user.entity';
+import { UserEntity, UserRole } from 'src/app/users/user.entity';
 import { UserRepository } from '../../../app/users/user-repository';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
@@ -36,6 +36,7 @@ export class PrismaUserRepository implements UserRepository {
         name: user.email,
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
+        role: UserRole[user.role],
       },
       user.id,
     );
@@ -47,6 +48,7 @@ export class PrismaUserRepository implements UserRepository {
         name: user.name,
         email: user.email,
         passwordHash: user.password,
+        role: user.role,
       },
     });
   }
