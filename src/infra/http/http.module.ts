@@ -20,6 +20,7 @@ import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { AuthGuard } from '../auth/auth.guard';
 import { RoleGuard } from '../auth/role.guard';
 import { HttpExceptionInterceptor } from './http-exception.interceptor';
+import { CreateRoomWithSeats } from '@app/room/useCases/create-room-with-seats';
 
 const UseCases = [
   CreateUser,
@@ -31,6 +32,7 @@ const UseCases = [
   CreateMovieSession,
   ListMovieSessionSeats,
   ValidateUser,
+  CreateRoomWithSeats,
 ];
 
 @Module({

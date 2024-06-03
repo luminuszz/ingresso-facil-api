@@ -1,4 +1,4 @@
-import { UseCaseImpl } from '../../../core/use-case-impl';
+import { UseCaseImpl } from '@core/use-case-impl';
 import { RoomEntity, RoomType } from '../room.entity';
 import { Injectable } from '@nestjs/common';
 import { RoomRepository } from '../room-repository';
