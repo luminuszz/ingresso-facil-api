@@ -80,7 +80,7 @@ model MovieSession {
 
 model Room {
   id        String   @id @default(cuid())
-  number    Int
+  number    Int      @unique
   type      RommType @default(STANDARD)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

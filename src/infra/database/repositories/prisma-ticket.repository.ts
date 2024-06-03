@@ -1,5 +1,5 @@
 import { TicketEntity, TicketStatus } from 'src/app/ticket/ticket.entity';
-import { TicketRepository } from '../../../app/ticket/ticket-repository';
+import { TicketRepository } from '@app/ticket/ticket-repository';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import {
@@ -16,6 +16,21 @@ interface PrismaTicketWithRelation extends PrismaTicket {
 @Injectable()
 export class PrismaTicketRepository implements TicketRepository {
   constructor(private readonly prisma: PrismaService) {}
+
+  async save(ticket: TicketEntity): Promise<void> {
+    await this.prisma.ticket.update({
+      where: {
+        id: ticket.id,
+      },
+      data: {
+        status: ticket.status,
+        ownerTo: ticket.ownerTo,
+        seatId: ticket.seatId,
+        movieSessionId: ticket.movieSessionId,
+        roomId: ticket.room,
+      },
+    });
+  }
 
   async findTicketByMovieSessionId(
     movieSessionId: string,

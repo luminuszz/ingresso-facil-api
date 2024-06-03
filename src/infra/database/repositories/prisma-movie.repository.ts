@@ -1,5 +1,8 @@
 import { MovieEntity } from 'src/app/movie/movie.entity';
-import { MovieRepository } from '@app/movie/movie-repository';
+import {
+  MovieRepository,
+  SeatEntityWithSeatStatus,
+} from '@app/movie/movie-repository';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import {
@@ -7,12 +10,15 @@ import {
   MovieSession as PrismaMovieSession,
 } from '@prisma/client';
 import { MovieSessionEntity } from '@app/movie/movie-session.entity';
+import { PrismaRoomRepository } from './prisma-room.repository';
 
 @Injectable()
 export class PrismaMovieRepository implements MovieRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async listMovieSessionSeats(movieSessionId: string): Promise<any> {
+  async listMovieSessionSeats(
+    movieSessionId: string,
+  ): Promise<SeatEntityWithSeatStatus[]> {
     const { id, roomId } = await this.prisma.movieSession.findUniqueOrThrow({
       where: {
         id: movieSessionId,
@@ -23,7 +29,7 @@ export class PrismaMovieRepository implements MovieRepository {
       },
     });
 
-    return this.prisma.seat.findMany({
+    const response = await this.prisma.seat.findMany({
       where: {
         roomId,
       },
@@ -37,6 +43,13 @@ export class PrismaMovieRepository implements MovieRepository {
           },
         },
       },
+    });
+
+    return response.map((seat) => {
+      return Object.assign(
+        PrismaRoomRepository.parsePrismaSeatToSeatEntity(seat),
+        { isOccupied: !!seat.Ticket.length },
+      );
     });
   }
 

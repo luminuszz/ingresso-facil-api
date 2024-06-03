@@ -10,6 +10,28 @@ import { Room as PrismaRom, Seat as PrismaSeat } from '@prisma/client';
 export class PrismaRoomRepository implements RoomRepository {
   constructor(private readonly prisma: PrismaService) {}
 
+  async createRoomWithSeats(
+    room: RoomEntity,
+    seats: { seatNumber: number }[],
+  ): Promise<void> {
+    await this.prisma.room.create({
+      data: {
+        number: room.number,
+        createdAt: room.createdAt,
+        type: room.type,
+
+        Seat: {
+          createMany: {
+            data: seats.map((seat) => ({
+              number: seat.seatNumber,
+            })),
+            skipDuplicates: true,
+          },
+        },
+      },
+    });
+  }
+
   async findSeatInRoom(
     roomId: string,
     seatId: string,
@@ -21,7 +43,7 @@ export class PrismaRoomRepository implements RoomRepository {
       },
     });
 
-    return seat ? this.parsePrismaSeatToSeatEntity(seat) : null;
+    return seat ? PrismaRoomRepository.parsePrismaSeatToSeatEntity(seat) : null;
   }
 
   async fetchSeatsByRoomId(roomId: string): Promise<SeatEntity[]> {
@@ -31,7 +53,7 @@ export class PrismaRoomRepository implements RoomRepository {
       },
     });
 
-    return results.map(this.parsePrismaSeatToSeatEntity);
+    return results.map(PrismaRoomRepository.parsePrismaSeatToSeatEntity);
   }
 
   async create(room: RoomEntity): Promise<void> {
@@ -59,10 +81,10 @@ export class PrismaRoomRepository implements RoomRepository {
       },
     });
 
-    return room ? this.parsePrismaRoomToRoomEntity(room) : null;
+    return room ? PrismaRoomRepository.parsePrismaRoomToRoomEntity(room) : null;
   }
 
-  private parsePrismaRoomToRoomEntity(prismaRoom: PrismaRom): RoomEntity {
+  public static parsePrismaRoomToRoomEntity(prismaRoom: PrismaRom): RoomEntity {
     return RoomEntity.create(
       {
         type: RoomType[prismaRoom.type],
@@ -74,7 +96,9 @@ export class PrismaRoomRepository implements RoomRepository {
     );
   }
 
-  private parsePrismaSeatToSeatEntity(prismaSeat: PrismaSeat): SeatEntity {
+  public static parsePrismaSeatToSeatEntity(
+    prismaSeat: PrismaSeat,
+  ): SeatEntity {
     return SeatEntity.create(
       {
         roomId: prismaSeat.roomId,

@@ -10,4 +10,9 @@ export abstract class RoomRepository {
     roomId: string,
     seatId: string,
   ): Promise<SeatEntity | null>;
+
+  abstract createRoomWithSeats(
+    room: RoomEntity,
+    seats: Array<{ seatNumber: number }>,
+  ): Promise<void>;
 }

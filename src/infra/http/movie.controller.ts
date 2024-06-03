@@ -35,14 +35,8 @@ export class MovieController {
 
   @Get('/movie-sessions/:id/seats')
   async listMovieSessionSeatsGet(@Param('id') id: string) {
-    const response = await this.listMovieSessionSeats.execute({
+    return this.listMovieSessionSeats.execute({
       movieSessionId: id,
     });
-
-    return response.map((seat) => ({
-      id: seat.id,
-      number: seat.number,
-      isOccupied: !!seat.Ticket.length,
-    }));
   }
 }

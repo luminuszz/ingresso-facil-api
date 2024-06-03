@@ -16,9 +16,10 @@ import { ListMovieSessionSeats } from '@app/movie/useCases/list-movie-session-se
 import { AuthController } from './auth.controller';
 import { ValidateUser } from '@app/users/useCases/validate-user';
 import { AuthModule } from '../auth/auth.module';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { AuthGuard } from '../auth/auth.guard';
 import { RoleGuard } from '../auth/role.guard';
+import { HttpExceptionInterceptor } from './http-exception.interceptor';
 
 const UseCases = [
   CreateUser,
@@ -38,6 +39,7 @@ const UseCases = [
     ...UseCases,
     { provide: APP_GUARD, useClass: AuthGuard },
     { provide: APP_GUARD, useClass: RoleGuard },
+    { provide: APP_INTERCEPTOR, useClass: HttpExceptionInterceptor },
   ],
   controllers: [
     UserController,

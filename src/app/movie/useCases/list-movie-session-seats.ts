@@ -6,15 +6,33 @@ interface ListMovieSessionSeatsRequest {
   movieSessionId: string;
 }
 
+type ListMovieSessionSeatsResponse = {
+  seats: {
+    id: string;
+    seatNumber: number;
+    isOccupied: boolean;
+  }[];
+};
+
 @Injectable()
 export class ListMovieSessionSeats
-  implements UseCaseImpl<ListMovieSessionSeatsRequest, any>
+  implements
+    UseCaseImpl<ListMovieSessionSeatsRequest, ListMovieSessionSeatsResponse>
 {
   constructor(private readonly movieRepository: MovieRepository) {}
 
   async execute({
     movieSessionId,
-  }: ListMovieSessionSeatsRequest): Promise<any> {
-    return await this.movieRepository.listMovieSessionSeats(movieSessionId);
+  }: ListMovieSessionSeatsRequest): Promise<ListMovieSessionSeatsResponse> {
+    const seats =
+      await this.movieRepository.listMovieSessionSeats(movieSessionId);
+
+    return {
+      seats: seats.map((seat) => ({
+        id: seat.id,
+        seatNumber: seat.number,
+        isOccupied: seat.isOccupied,
+      })),
+    };
   }
 }
