@@ -12,6 +12,27 @@ import { MovieSessionEntity } from '@app/movie/movie-session.entity';
 export class PrismaMovieRepository implements MovieRepository {
   constructor(private readonly prisma: PrismaService) {}
 
+  async listMovieSessionSeats(movieSessionId: string): Promise<any> {
+    const movieSession = await this.prisma.movieSession.findUniqueOrThrow({
+      where: {
+        id: movieSessionId,
+      },
+    });
+
+    return this.prisma.seat.findMany({
+      where: {
+        roomId: movieSession.roomId,
+      },
+      include: {
+        Ticket: {
+          where: {
+            movieSessionId: movieSession.id,
+          },
+        },
+      },
+    });
+  }
+
   async createMovieSession(data: MovieSessionEntity): Promise<void> {
     await this.prisma.movieSession.create({
       data: {

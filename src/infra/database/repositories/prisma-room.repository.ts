@@ -10,6 +10,20 @@ import { Room as PrismaRom, Seat as PrismaSeat } from '@prisma/client';
 export class PrismaRoomRepository implements RoomRepository {
   constructor(private readonly prisma: PrismaService) {}
 
+  async findSeatInRoom(
+    roomId: string,
+    seatId: string,
+  ): Promise<SeatEntity | null> {
+    const seat = await this.prisma.seat.findUnique({
+      where: {
+        roomId,
+        id: seatId,
+      },
+    });
+
+    return seat ? this.parsePrismaSeatToSeatEntity(seat) : null;
+  }
+
   async fetchSeatsByRoomId(roomId: string): Promise<SeatEntity[]> {
     const results = await this.prisma.seat.findMany({
       where: {

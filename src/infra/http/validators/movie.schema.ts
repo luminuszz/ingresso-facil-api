@@ -10,10 +10,10 @@ export type CreateMovieDto = z.infer<typeof createMovieSchema>;
 
 export const createMovieSessionSchema = z
   .object({
-    movieId: z.string().cuid(),
-    roomId: z.string().cuid(),
-    startsAt: z.date().min(new Date()),
-    endsAt: z.date().min(addHours(new Date(), 2)),
+    movieId: z.string(),
+    roomId: z.string(),
+    startsAt: z.coerce.date().min(new Date()),
+    endsAt: z.coerce.date().min(addHours(new Date(), 2)),
     price: z.number().int().positive(),
   })
   .refine((data) => isAfter(data.endsAt, data.startsAt), {

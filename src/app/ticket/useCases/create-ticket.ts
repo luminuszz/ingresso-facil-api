@@ -1,11 +1,11 @@
-import { UseCaseImpl } from '../../../core/use-case-impl';
+import { UseCaseImpl } from '@core/use-case-impl';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { TicketEntity, TicketStatus } from '../ticket.entity';
-import { UserRepository } from '../../users/user-repository';
-import { ResourceNotFoundException } from '../../../core/errors';
+import { ResourceNotFoundException } from '@core/errors';
 import { TicketRepository } from '../ticket-repository';
 import { MovieRepository } from '@app/movie/movie-repository';
 import { isPast } from 'date-fns';
+import { RoomRepository } from '@app/room/room-repository';
 
 interface CreateTicketRequest {
   userId: string;
@@ -22,6 +22,7 @@ export class CreateTicket
   constructor(
     private readonly ticketRepository: TicketRepository,
     private readonly movieRepository: MovieRepository,
+    private readonly roomRepository: RoomRepository,
   ) {}
 
   async execute({
@@ -42,11 +43,21 @@ export class CreateTicket
       throw new BadRequestException('Movie session is already ended');
     }
 
-    const tickets = await this.ticketRepository.findTicketByMovieSessionId(
-      movieSession.id,
+    const seatIsInRoom = await this.roomRepository.findSeatInRoom(
+      movieSession.roomId,
+      seatId,
     );
 
-    const seatIsAvailable = !tickets.find((ticket) => ticket.seatId === seatId);
+    if (!seatIsInRoom) {
+      throw new ResourceNotFoundException('Seat');
+    }
+
+    const sessionInThisSessions =
+      await this.ticketRepository.findTicketByMovieSessionId(movieSession.id);
+
+    const seatIsAvailable = !sessionInThisSessions.find(
+      (ticket) => ticket.seatId === seatId,
+    );
 
     if (!seatIsAvailable) {
       throw new BadRequestException('Seat is not available');
@@ -54,7 +65,7 @@ export class CreateTicket
 
     const ticket = TicketEntity.create({
       ownerTo: userId,
-      seatId: seatId,
+      seatId: seatIsInRoom.id,
       roomId: movieSession.roomId,
       movieSessionId: movieSession.id,
       createdAt: new Date(),

@@ -6,4 +6,8 @@ export abstract class RoomRepository {
   abstract addSeatToRoom(seat: SeatEntity): Promise<void>;
   abstract findById(id: string): Promise<RoomEntity | null>;
   abstract fetchSeatsByRoomId(roomId: string): Promise<SeatEntity[]>;
+  abstract findSeatInRoom(
+    roomId: string,
+    seatId: string,
+  ): Promise<SeatEntity | null>;
 }

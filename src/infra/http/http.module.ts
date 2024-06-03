@@ -12,6 +12,7 @@ import { AddSeatToRoom } from '@app/room/useCases/add-seat-to-room';
 import { ListSeatsInRoom } from '@app/room/useCases/list-seats-in-room';
 import { RoomController } from './room.controller';
 import { CreateMovieSession } from '@app/movie/useCases/create-movie-session';
+import { ListMovieSessionSeats } from '@app/movie/useCases/list-movie-session-seats';
 
 const UseCases = [
   CreateUser,
@@ -21,6 +22,7 @@ const UseCases = [
   AddSeatToRoom,
   ListSeatsInRoom,
   CreateMovieSession,
+  ListMovieSessionSeats,
 ];
 
 @Module({
