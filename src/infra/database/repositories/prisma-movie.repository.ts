@@ -13,20 +13,27 @@ export class PrismaMovieRepository implements MovieRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async listMovieSessionSeats(movieSessionId: string): Promise<any> {
-    const movieSession = await this.prisma.movieSession.findUniqueOrThrow({
+    const { id, roomId } = await this.prisma.movieSession.findUniqueOrThrow({
       where: {
         id: movieSessionId,
+      },
+      select: {
+        id: true,
+        roomId: true,
       },
     });
 
     return this.prisma.seat.findMany({
       where: {
-        roomId: movieSession.roomId,
+        roomId,
       },
       include: {
         Ticket: {
+          select: {
+            id: true,
+          },
           where: {
-            movieSessionId: movieSession.id,
+            movieSessionId: id,
           },
         },
       },
