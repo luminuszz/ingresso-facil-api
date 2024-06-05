@@ -3,6 +3,7 @@ import { Entity } from '@core/Entity';
 export enum UserRole {
   ADMIN = 'ADMIN',
   USER = 'USER',
+  MANAGER = 'MANAGER',
 }
 
 interface UserProps {
@@ -15,6 +16,8 @@ interface UserProps {
 }
 
 export class UserEntity extends Entity<UserProps> {
+  public __typename = 'User' as const;
+
   get name(): string {
     return this.props.name;
   }

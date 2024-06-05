@@ -5,14 +5,22 @@ import {
   createTicketSchema,
 } from './validators/tickets.schema';
 import { CreateTicket } from '@app/ticket/useCases/create-ticket';
+import { ProtectedFor, User } from '../auth/decorators';
 
 @Controller('/tickets')
 export class TicketController {
   constructor(private readonly createTicket: CreateTicket) {}
 
   @Post()
+  @ProtectedFor('USER')
   @Validate(createTicketSchema)
-  async createTicketPost(@Body() dto: CreateTicketDto) {
-    await this.createTicket.execute(dto);
+  async createTicketPost(
+    @Body() dto: CreateTicketDto,
+    @User('id') userId: string,
+  ) {
+    await this.createTicket.execute({
+      ...dto,
+      userId,
+    });
   }
 }

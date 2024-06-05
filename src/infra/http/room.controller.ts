@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   Post,
+  Put,
 } from '@nestjs/common';
 import { CreateRoomDto, createRoomSchema } from './validators/rooms.schema';
 import { Validate } from './validators/zod-validation.pipe';
@@ -45,5 +46,13 @@ export class RoomController {
       id: seat.id,
       roomId: seat.roomId,
     }));
+  }
+
+  @Put(':roomId')
+  async updateRoom(
+    @Param('roomId') roomId: string,
+    // @Body() dto: CreateRoomDto,
+  ) {
+    if (!roomId) throw new BadRequestException('Room id is required');
   }
 }

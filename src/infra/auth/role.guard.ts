@@ -3,12 +3,14 @@ import { AuthService } from './auth.service';
 import { Reflector } from '@nestjs/core';
 import { ROLE_DECORATOR_METADATA_KEY } from './decorators';
 import { AuthUserTokenPayload } from './dto';
+import { FindUserById } from '@app/users/useCases/find-user-by-id';
 
 @Injectable()
 export class RoleGuard implements CanActivate {
   constructor(
     private readonly authService: AuthService,
     private readonly reflect: Reflector,
+    private readonly findUserById: FindUserById,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {

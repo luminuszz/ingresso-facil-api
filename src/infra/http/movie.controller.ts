@@ -33,6 +33,7 @@ export class MovieController {
     await this.createMovieSession.execute(dto);
   }
 
+  @ProtectedFor('USER')
   @Get('/movie-sessions/:id/seats')
   async listMovieSessionSeatsGet(@Param('id') id: string) {
     return this.listMovieSessionSeats.execute({
