@@ -4,12 +4,12 @@ import {
   createMovieSchema,
   CreateMovieSessionDto,
   createMovieSessionSchema,
-} from './validators/movie.schema';
-import { Validate } from './validators/zod-validation.pipe';
+} from '../validators/movie.schema';
+import { Validate } from '../validators/zod-validation.pipe';
 import { CreateMovie } from '@app/movie/useCases/create-movie';
 import { CreateMovieSession } from '@app/movie/useCases/create-movie-session';
 import { ListMovieSessionSeats } from '@app/movie/useCases/list-movie-session-seats';
-import { ProtectedFor } from '../auth/decorators';
+import { ProtectedFor } from '../../auth/guards/decorators';
 
 @Controller('/movies')
 export class MovieController {

@@ -5,8 +5,8 @@ import { ValidateUser } from '@app/users/useCases/validate-user';
 import { PrismaModule } from '../database/prisma.module';
 import { EncryptModule } from '../encrypt/encrypt.module';
 import { FindUserById } from '@app/users/useCases/find-user-by-id';
-import { AuthGuard } from './auth.guard';
-import { RoleGuard } from './role.guard';
+import { AuthGuard } from './guards/auth.guard';
+import { RoleGuard } from './guards/role.guard';
 import { ValidateUserRole } from '@app/users/useCases/validate-user-role';
 
 @Module({

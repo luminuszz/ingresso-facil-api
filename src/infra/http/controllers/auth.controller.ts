@@ -1,8 +1,8 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { AuthService } from '../auth/auth.service';
-import { Validate } from './validators/zod-validation.pipe';
-import { LoginDto, loginSchema } from './validators/auth.schema';
-import { IsPublic } from '../auth/decorators';
+import { AuthService } from '../../auth/auth.service';
+import { Validate } from '../validators/zod-validation.pipe';
+import { LoginDto, loginSchema } from '../validators/auth.schema';
+import { IsPublic } from '../../auth/guards/decorators';
 
 @Controller('auth')
 export class AuthController {

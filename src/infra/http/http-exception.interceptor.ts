@@ -4,11 +4,15 @@ import {
   ExecutionContext,
   Injectable,
   NestInterceptor,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { catchError, Observable } from 'rxjs';
 
 import { UserAlreadyExists } from '@app/users/exceptions';
-import { ResourceNotFoundException } from '@core/errors';
+import {
+  InvalidPermissionException,
+  ResourceNotFoundException,
+} from '@core/errors';
 
 interface PrismaError {
   code: string;
@@ -35,6 +39,10 @@ export class HttpExceptionInterceptor implements NestInterceptor {
           throw new BadRequestException({
             message: `Not found Entity`,
           });
+        }
+
+        if (exception instanceof InvalidPermissionException) {
+          throw new UnauthorizedException(exception.message);
         }
 
         throw exception;

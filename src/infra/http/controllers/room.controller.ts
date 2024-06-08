@@ -7,8 +7,8 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { CreateRoomDto, createRoomSchema } from './validators/rooms.schema';
-import { Validate } from './validators/zod-validation.pipe';
+import { CreateRoomDto, createRoomSchema } from '../validators/rooms.schema';
+import { Validate } from '../validators/zod-validation.pipe';
 import { CreateRoom } from '@app/room/useCases/create-room';
 import { ListSeatsInRoom } from '@app/room/useCases/list-seats-in-room';
 import { CreateRoomWithSeats } from '@app/room/useCases/create-room-with-seats';

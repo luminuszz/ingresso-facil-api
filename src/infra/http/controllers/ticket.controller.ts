@@ -1,11 +1,11 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { Validate } from './validators/zod-validation.pipe';
+import { Validate } from '../validators/zod-validation.pipe';
 import {
   CreateTicketDto,
   createTicketSchema,
-} from './validators/tickets.schema';
+} from '../validators/tickets.schema';
 import { CreateTicket } from '@app/ticket/useCases/create-ticket';
-import { ProtectedFor, User } from '../auth/decorators';
+import { ProtectedFor, User } from '../../auth/guards/decorators';
 
 @Controller('/tickets')
 export class TicketController {

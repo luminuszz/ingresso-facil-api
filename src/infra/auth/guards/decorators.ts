@@ -3,7 +3,7 @@ import {
   ExecutionContext,
   SetMetadata,
 } from '@nestjs/common';
-import { AuthUserTokenPayload } from './dto';
+import { AuthUserTokenPayload } from '../dto';
 import { UserRole } from '@app/users/user.entity';
 
 export const User = createParamDecorator(
