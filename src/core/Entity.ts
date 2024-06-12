@@ -4,6 +4,7 @@ export abstract class Entity<EntityProps> {
 
   protected constructor(props: EntityProps, id?: string) {
     this.props = props;
+
     if (id) {
       this._id = id;
     }

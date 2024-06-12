@@ -22,6 +22,7 @@ import { RoleGuard } from '../auth/guards/role.guard';
 import { HttpExceptionInterceptor } from './http-exception.interceptor';
 import { CreateRoomWithSeats } from '@app/room/useCases/create-room-with-seats';
 import { UpdateUser } from '@app/users/useCases/update-user';
+import { TransferTicketOwner } from '@app/ticket/useCases/transfer-ticket-owner';
 
 const UseCases = [
   CreateUser,
@@ -35,8 +36,9 @@ const UseCases = [
   ValidateUser,
   CreateRoomWithSeats,
   UpdateUser,
+  TransferTicketOwner,
 ];
-
+``;
 @Module({
   imports: [PrismaModule, EncryptModule, AuthModule],
   providers: [

@@ -16,7 +16,7 @@ import { CreateRoomWithSeats } from '@app/room/useCases/create-room-with-seats';
 @Controller('rooms')
 export class RoomController {
   constructor(
-    private createRoom: CreateRoom,
+    private readonly createRoom: CreateRoom,
     private readonly listSeatsInRoom: ListSeatsInRoom,
     private readonly createRoomWithSeats: CreateRoomWithSeats,
   ) {}

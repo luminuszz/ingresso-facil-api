@@ -20,8 +20,9 @@ export const permissions: Record<Roles, PermissionsByRole> = {
     can('get', 'Ticket', { ownerTo: { $eq: user.id } });
     cannot('change-role', 'User');
   },
-  ADMIN(user, { can }) {
+  ADMIN(user, { can, cannot }) {
     can('manage', 'all');
+    cannot('delete', 'User', { id: { $not: { $eq: user.id } } });
   },
 
   MANAGER(user, { can }) {

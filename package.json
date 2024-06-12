@@ -18,9 +18,10 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "studio": "pnpm prisma studio",
+    "studio": "pnpm prisma studio --port 3001",
     "run-docker": "docker compose up -d",
     "postrun-docker": "pnpm prisma migrate deve"
+
   },
   "dependencies": {
     "@casl/ability": "^6.7.1",

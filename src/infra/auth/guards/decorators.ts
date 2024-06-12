@@ -6,6 +6,9 @@ import {
 import { AuthUserTokenPayload } from '../dto';
 import { UserRole } from '@app/users/user.entity';
 
+export const IS_PUBLIC_METADATA_KEY = 'isPublic';
+export const ROLE_DECORATOR_METADATA_KEY = 'roles';
+
 export const User = createParamDecorator(
   (keyData: keyof AuthUserTokenPayload | undefined, ctx: ExecutionContext) => {
     const request = ctx
@@ -16,11 +19,10 @@ export const User = createParamDecorator(
   },
 );
 
-export const IS_PUBLIC_METADATA_KEY = 'isPublic';
+export const IsPublic = () => {
+  return SetMetadata(IS_PUBLIC_METADATA_KEY, true);
+};
 
-export const IsPublic = () => SetMetadata(IS_PUBLIC_METADATA_KEY, true);
-
-export const ROLE_DECORATOR_METADATA_KEY = 'roles';
-
-export const ProtectedFor = (role: keyof typeof UserRole) =>
-  SetMetadata(ROLE_DECORATOR_METADATA_KEY, role);
+export const ProtectedFor = (role: keyof typeof UserRole) => {
+  return SetMetadata(ROLE_DECORATOR_METADATA_KEY, role);
+};
